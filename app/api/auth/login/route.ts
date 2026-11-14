@@ -7,6 +7,7 @@ export async function POST(request: Request) {
   const result = await authenticate(String(email ?? ''), String(password ?? ''));
   if (!result) return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
   const response = NextResponse.json({ user: result.user });
-  response.cookies.set('lr_session', result.token, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', maxAge: 60 * 60 * 24 * 30, path: '/' });
+  // The VPS is currently served over HTTP; enable Secure after HTTPS is configured.
+  response.cookies.set('lr_session', result.token, { httpOnly: true, sameSite: 'lax', secure: false, maxAge: 60 * 60 * 24 * 30, path: '/' });
   return response;
 }
