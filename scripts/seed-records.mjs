@@ -17,7 +17,8 @@ async function verifyDiscogs(url) {
     if (!response.ok) return { ok: false, reason: `Discogs API HTTP ${response.status}` };
     const release = await response.json();
     const images = [...(release.images ?? [])].sort((a, b) => (b.width * b.height) - (a.width * a.height));
-    return { ok: true, year: release.year, title: release.title, artist: release.artists?.map(a => a.name).join(', '), coverUrl: images[0]?.uri ?? release.uri150 ?? release.thumb ?? null };
+    const finish = [...new Set((release.formats ?? []).flatMap(f => f.descriptions ?? []))].join(' ');
+    return { ok: true, year: release.year, title: release.title, artist: release.artists?.map(a => a.name).join(', '), finish, coverUrl: images[0]?.uri ?? release.uri150 ?? release.thumb ?? null };
   } catch (error) {
     return { ok: false, reason: error instanceof Error ? error.message : 'request failed' };
   }
@@ -27,7 +28,7 @@ await pool.query(`CREATE TABLE IF NOT EXISTS records (
   id TEXT PRIMARY KEY, title TEXT NOT NULL, artist TEXT NOT NULL,
   year INTEGER NOT NULL CHECK (year BETWEEN 1900 AND 2100), genre TEXT NOT NULL,
   status TEXT NOT NULL CHECK (status IN ('collection', 'wishlist')),
-  color TEXT NOT NULL, notes TEXT NOT NULL DEFAULT '', discogs_url TEXT, cover_url TEXT,
+  color TEXT NOT NULL, finish TEXT NOT NULL DEFAULT 'Solid', notes TEXT NOT NULL DEFAULT '', discogs_url TEXT, cover_url TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(), updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 )`);
 
@@ -42,9 +43,9 @@ for (const record of importedRecords) {
   if (!check.ok) { console.warn(`SKIP ${record.artist} — ${record.title}: ${check.reason}`); skipped++; continue; }
   const mismatch = discogsUrl && (check.title?.toLowerCase() !== record.title.toLowerCase() || !check.artist?.toLowerCase().includes(record.artist.toLowerCase()));
   if (mismatch) console.warn(`NOTE ${record.artist} — ${record.title}: Discogs metadata differs`);
-  await pool.query(`INSERT INTO records (id,title,artist,year,genre,status,color,notes,discogs_url,cover_url)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT (id) DO UPDATE SET cover_url=EXCLUDED.cover_url, discogs_url=EXCLUDED.discogs_url`,
-    [record.id, record.title, record.artist, check.year || record.year, record.genre, record.status, record.color, `${record.notes}${mismatch ? '\nDiscogs metadata differs from the spreadsheet label.' : ''}`, discogsUrl, check.coverUrl]);
+  await pool.query(`INSERT INTO records (id,title,artist,year,genre,status,color,finish,notes,discogs_url,cover_url)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) ON CONFLICT (id) DO UPDATE SET finish=EXCLUDED.finish, cover_url=EXCLUDED.cover_url, discogs_url=EXCLUDED.discogs_url`,
+    [record.id, record.title, record.artist, check.year || record.year, record.genre, record.status, record.color, check.finish || 'Solid', `${record.notes}${mismatch ? '\nDiscogs metadata differs from the spreadsheet label.' : ''}`, discogsUrl, check.coverUrl]);
   imported++;
 }
 console.log(`Imported: ${imported}; skipped after Discogs validation: ${skipped}`);
