@@ -16,8 +16,16 @@ async function search(record) {
   if (response.status === 429) { await wait(15000); return search(record); }
   if (!response.ok) return null;
   const data = await response.json();
-  const exact = (data.results ?? []).find(item => norm(item.title).includes(norm(record.title)) && norm(item.title).includes(norm(record.artist)) && (item.cover_image || item.thumb));
-  return exact ?? null;
+  const titleTokens = norm(record.title).split(' ').filter(Boolean);
+  const exact = (data.results ?? []).find(item => titleTokens.every(token => norm(item.title).includes(token)));
+  if (!exact?.resource_url) return null;
+  await wait(1100);
+  const releaseResponse = await fetch(exact.resource_url, { headers });
+  if (releaseResponse.status === 429) { await wait(15000); return search(record); }
+  if (!releaseResponse.ok) return null;
+  const release = await releaseResponse.json();
+  const images = [...(release.images ?? [])].sort((a, b) => (b.width * b.height) - (a.width * a.height));
+  return { ...exact, cover_image: images[0]?.uri ?? release.uri150 ?? release.thumb ?? null };
 }
 
 const { rows } = await pool.query('SELECT id,artist,title FROM records WHERE cover_url IS NULL ORDER BY status,artist,title');
