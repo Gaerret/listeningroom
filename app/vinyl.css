@@ -1,4 +1,6 @@
 .cover { overflow: visible !important; }
+.sleeve-wrap { position: relative; width: 100%; height: 100%; }
+.sleeve-wrap .sleeve { position: relative; z-index: 1; width: 82%; height: 100%; box-shadow: 0 8px 18px #0009; }
 .vinyl-peek { position: absolute; z-index: 0; width: 86%; aspect-ratio: 1; border-radius: 50%; right: -31%; top: 7%; background: repeating-radial-gradient(circle, #171717 0 2px, #ffffff18 3px, #171717 4px); box-shadow: 8px 8px 18px #0008; transition: right .25s ease; }
-.record-card:hover .vinyl-peek { right: -24%; }
+.record-card:hover .vinyl-peek { right: -25%; }
 .vinyl-peek::after { content: ''; position: absolute; inset: 39%; border-radius: 50%; background: var(--vinyl-label); border: 5px solid #d5b27b88; }
