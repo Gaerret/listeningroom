@@ -34,3 +34,17 @@ npm run build
 Unit tests cover backup schema validation, malformed imports, duplicate IDs and limits. A production build checks Next.js compilation and TypeScript. Browser interaction and physical iPhone/Safari testing remain separate manual checks.
 
 No environment variables are required. Deploy to a host supporting Next.js 16 and Node.js; no hosting account is preconfigured.
+
+## Docker
+
+Build and run the production container with Docker Compose:
+
+```sh
+docker compose up -d --build
+```
+
+The application is exposed on `127.0.0.1:3100` on the host. Follow logs with:
+
+```sh
+docker compose logs -f listeningroom
+```
