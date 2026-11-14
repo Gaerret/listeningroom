@@ -33,6 +33,8 @@ await pool.query(`CREATE TABLE IF NOT EXISTS records (
 let imported = 0;
 let skipped = 0;
 for (const record of importedRecords) {
+  const existing = await pool.query('SELECT id, cover_url FROM records WHERE id=$1', [record.id]);
+  if (existing.rows[0]?.cover_url) { imported++; continue; }
   const match = record.notes.match(/Discogs: (https?:\/\/\S+)/);
   const discogsUrl = match?.[1] ?? null;
   const check = await verifyDiscogs(discogsUrl);
