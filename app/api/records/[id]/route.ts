@@ -10,7 +10,7 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
   return rows[0] ? NextResponse.json(rows[0]) : NextResponse.json({ error: 'Not found' }, { status: 404 });
 }
 
-export async function DELETE(_: Request, context: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
   await ensureSchema();
   if (!await currentUser(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { id } = await context.params;
