@@ -25,6 +25,10 @@ services:
       DATABASE_URL: postgres://listeningroom:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/listeningroom
       ADMIN_EMAIL: ${ADMIN_EMAIL:?Set ADMIN_EMAIL in .env}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env}
+      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3000
+    volumes:
+      - listeningroom_covers:/data/covers
 
 volumes:
   listeningroom_pgdata:
+  listeningroom_covers:
