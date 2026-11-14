@@ -8,7 +8,7 @@ function Sleeve({record,large=false}:{record:RecordItem;large?:boolean}) { retur
 export default function Home() {
  const [records,setRecords]=useState<RecordItem[]>([]); const [ready,setReady]=useState(false); const [storageError,setStorageError]=useState('');
  const [tab,setTab]=useState<'collection'|'wishlist'>('collection'); const [search,setSearch]=useState(''); const [genre,setGenre]=useState('All genres'); const [sort,setSort]=useState('Recently added'); const [editing,setEditing]=useState<RecordItem|null>(null); const [message,setMessage]=useState(''); const file=useRef<HTMLInputElement>(null); const dialog=useRef<HTMLDialogElement>(null);
- useEffect(()=>{fetch('/api/records').then(r=>r.ok?r.json():Promise.reject()).then(data=>{if(!validRecords(data))throw Error();setRecords(data);setReady(true);}).catch(()=>{setStorageError('The server database is unavailable.');setReady(true);});},[]);
+ useEffect(()=>{fetch('/api/records').then(r=>{if(r.status===401){window.location.href='/login';return Promise.reject();}return r.ok?r.json():Promise.reject();}).then(data=>{if(!validRecords(data))throw Error();setRecords(data);setReady(true);}).catch(()=>{setStorageError('The server database is unavailable.');setReady(true);});},[]);
  useEffect(()=>{if(editing) dialog.current?.showModal(); else dialog.current?.close();},[editing]);
  useEffect(()=>{if(message){const t=setTimeout(()=>setMessage(''),4000);return ()=>clearTimeout(t);}},[message]);
  const count=records.filter(r=>r.status==='collection').length; const wished=records.length-count;
