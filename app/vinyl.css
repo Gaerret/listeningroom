@@ -1,6 +1,10 @@
 .cover { overflow: visible !important; }
 .sleeve-wrap { position: relative; width: 100%; height: 100%; }
-.sleeve-wrap .sleeve { position: relative; z-index: 1; width: 82%; height: 100%; box-shadow: 0 8px 18px #0009; }
-.vinyl-peek { position: absolute; z-index: 0; width: 86%; aspect-ratio: 1; border-radius: 50%; right: -31%; top: 7%; background: repeating-radial-gradient(circle, #171717 0 2px, #ffffff18 3px, #171717 4px); box-shadow: 8px 8px 18px #0008; transition: right .25s ease; }
+.sleeve-wrap .sleeve { position: relative; z-index: 1; width: 82%; height: 100%; aspect-ratio: 1; box-shadow: 0 8px 18px #0009; }
+.vinyl-peek { position: absolute; z-index: 0; width: 86%; aspect-ratio: 1; border-radius: 50%; right: -31%; top: 7%; background: var(--vinyl-base, #222); box-shadow: 8px 8px 18px #0008; transition: right .25s ease; }
+.vinyl-peek::before { content:''; position:absolute; inset:0; border-radius:50%; background: repeating-radial-gradient(circle, #ffffff1c 0 1px, transparent 2px 4px); }
+.vinyl-peek[data-finish*="Clear"],.vinyl-peek[data-finish*="Transparent"] { opacity:.86; background:linear-gradient(135deg,#f5efe3aa,#ffffff22),var(--vinyl-base); }
+.vinyl-peek[data-finish*="Splatter"],.vinyl-peek[data-finish*="Marble"] { background:radial-gradient(circle at 32% 28%,#fff8 0 3%,transparent 4%),radial-gradient(circle at 70% 62%,#c33 0 5%,transparent 6%),radial-gradient(circle at 55% 22%,#fff 0 2%,transparent 3%),var(--vinyl-base); }
+.vinyl-peek[data-finish*="Metallic"] { background:linear-gradient(135deg,#eee8,#5556 35%,#fff8 48%,#3338 65%),var(--vinyl-base); }
 .record-card:hover .vinyl-peek { right: -25%; }
 .vinyl-peek::after { content: ''; position: absolute; inset: 39%; border-radius: 50%; background: var(--vinyl-label); border: 5px solid #d5b27b88; }
