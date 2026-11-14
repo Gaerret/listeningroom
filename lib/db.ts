@@ -31,6 +31,7 @@ export async function ensureSchema() {
       genre TEXT NOT NULL,
       status TEXT NOT NULL CHECK (status IN ('collection', 'wishlist')),
       color TEXT NOT NULL,
+      finish TEXT NOT NULL DEFAULT 'Solid',
       notes TEXT NOT NULL DEFAULT '',
       discogs_url TEXT,
       cover_url TEXT,
@@ -39,6 +40,7 @@ export async function ensureSchema() {
     )
   `);
   await db.query('ALTER TABLE records ADD COLUMN IF NOT EXISTS cover_url TEXT');
+  await db.query("ALTER TABLE records ADD COLUMN IF NOT EXISTS finish TEXT NOT NULL DEFAULT 'Solid'");
 }
 
 function hashPassword(password: string, salt = randomBytes(16).toString('hex')) {
