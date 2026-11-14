@@ -16,7 +16,8 @@ async function verifyDiscogs(url) {
     if (response.status === 429) { await new Promise(resolve => setTimeout(resolve, 15000)); return verifyDiscogs(url); }
     if (!response.ok) return { ok: false, reason: `Discogs API HTTP ${response.status}` };
     const release = await response.json();
-    return { ok: true, year: release.year, title: release.title, artist: release.artists?.map(a => a.name).join(', '), coverUrl: release.images?.find(i => i.type === 'primary')?.uri ?? release.thumb ?? null };
+    const images = [...(release.images ?? [])].sort((a, b) => (b.width * b.height) - (a.width * a.height));
+    return { ok: true, year: release.year, title: release.title, artist: release.artists?.map(a => a.name).join(', '), coverUrl: images[0]?.uri ?? release.uri150 ?? release.thumb ?? null };
   } catch (error) {
     return { ok: false, reason: error instanceof Error ? error.message : 'request failed' };
   }
@@ -34,7 +35,7 @@ let imported = 0;
 let skipped = 0;
 for (const record of importedRecords) {
   const existing = await pool.query('SELECT id, cover_url FROM records WHERE id=$1', [record.id]);
-  if (existing.rows[0]?.cover_url) { imported++; continue; }
+  if (existing.rows[0]?.cover_url && !/h:150|w:150/.test(existing.rows[0].cover_url)) { imported++; continue; }
   const match = record.notes.match(/Discogs: (https?:\/\/\S+)/);
   const discogsUrl = match?.[1] ?? null;
   const check = await verifyDiscogs(discogsUrl);
