@@ -18,6 +18,6 @@ COPY --from=build /app/.next ./.next
 
 RUN npm install --omit=dev && npm cache clean --force
 
-USER node
+USER root
 EXPOSE 3000
-CMD ["npm", "run", "start"]
+CMD ["sh", "-c", "chown -R node:node /data/covers && exec su node -s /bin/sh -c 'npm run start'"]
