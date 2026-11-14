@@ -6,6 +6,7 @@
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
+    "seed": "node --experimental-strip-types scripts/seed-records.mjs",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts"
   },
@@ -13,7 +14,8 @@
     "next": "^16.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "lucide-react": "^0.468.0"
+    "lucide-react": "^0.468.0",
+    "pg": "^8.13.1"
   },
   "devDependencies": {
     "typescript": "^5.9.0",
