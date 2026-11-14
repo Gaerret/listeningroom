@@ -11,7 +11,9 @@ async function verifyDiscogs(url) {
   const match = url.match(discogs);
   if (!match) return { ok: false, reason: 'invalid Discogs release URL' };
   try {
+    await new Promise(resolve => setTimeout(resolve, 1100));
     const response = await fetch(`https://api.discogs.com/releases/${match[3]}`, { headers: { 'user-agent': 'TheListeningRoom/1.0' } });
+    if (response.status === 429) { await new Promise(resolve => setTimeout(resolve, 15000)); return verifyDiscogs(url); }
     if (!response.ok) return { ok: false, reason: `Discogs API HTTP ${response.status}` };
     const release = await response.json();
     return { ok: true, year: release.year, title: release.title, artist: release.artists?.map(a => a.name).join(', '), coverUrl: release.images?.find(i => i.type === 'primary')?.uri ?? release.thumb ?? null };
