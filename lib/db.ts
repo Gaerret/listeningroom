@@ -47,6 +47,7 @@ export async function ensureSchema() {
   await db.query("ALTER TABLE records ADD COLUMN IF NOT EXISTS vinyl_count INTEGER NOT NULL DEFAULT 1");
   await db.query("ALTER TABLE records ADD COLUMN IF NOT EXISTS vinyl2_color TEXT NOT NULL DEFAULT '#242323'");
   await db.query("ALTER TABLE records ADD COLUMN IF NOT EXISTS vinyl3_color TEXT NOT NULL DEFAULT '#242323'");
+  await db.query("ALTER TABLE records ADD COLUMN IF NOT EXISTS label_color TEXT NOT NULL DEFAULT '#e8e2d4'");
 }
 
 function hashPassword(password: string, salt = randomBytes(16).toString('hex')) {
