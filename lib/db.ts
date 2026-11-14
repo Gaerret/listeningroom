@@ -39,6 +39,7 @@ export async function ensureSchema() {
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `);
+  await db.query(`CREATE TABLE IF NOT EXISTS wishlist_reservations (record_id TEXT PRIMARY KEY REFERENCES records(id) ON DELETE CASCADE, code_hash TEXT NOT NULL UNIQUE, created_at TIMESTAMPTZ NOT NULL DEFAULT now())`);
   await db.query('ALTER TABLE records ADD COLUMN IF NOT EXISTS cover_url TEXT');
   await db.query("ALTER TABLE records ADD COLUMN IF NOT EXISTS finish TEXT NOT NULL DEFAULT 'Solid'");
   await db.query("ALTER TABLE records ADD COLUMN IF NOT EXISTS splatter_a TEXT NOT NULL DEFAULT '#e43b25'");
