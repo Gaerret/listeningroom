@@ -43,7 +43,7 @@ Build and run the production container with Docker Compose:
 docker compose up -d --build
 ```
 
-The application is exposed on `127.0.0.1:3100` on the host. Follow logs with:
+The application is exposed on port `3100` on the host. Follow logs with:
 
 ```sh
 docker compose logs -f listeningroom
