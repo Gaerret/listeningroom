@@ -1,11 +1,28 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: listeningroom-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: listeningroom
+      POSTGRES_USER: listeningroom
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - listeningroom_pgdata:/var/lib/postgresql/data
+
   listeningroom:
     build:
       context: .
     container_name: listeningroom
     restart: unless-stopped
+    depends_on:
+      - postgres
     ports:
       - "3100:3000"
     environment:
       NODE_ENV: production
       PORT: 3000
+      DATABASE_URL: postgres://listeningroom:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/listeningroom
+
+volumes:
+  listeningroom_pgdata:
