@@ -41,6 +41,9 @@ export async function ensureSchema() {
   `);
   await db.query('ALTER TABLE records ADD COLUMN IF NOT EXISTS cover_url TEXT');
   await db.query("ALTER TABLE records ADD COLUMN IF NOT EXISTS finish TEXT NOT NULL DEFAULT 'Solid'");
+  await db.query("ALTER TABLE records ADD COLUMN IF NOT EXISTS splatter_a TEXT NOT NULL DEFAULT '#e43b25'");
+  await db.query("ALTER TABLE records ADD COLUMN IF NOT EXISTS splatter_b TEXT NOT NULL DEFAULT '#ff9f1c'");
+  await db.query("ALTER TABLE records ADD COLUMN IF NOT EXISTS splatter_c TEXT NOT NULL DEFAULT '#111111'");
 }
 
 function hashPassword(password: string, salt = randomBytes(16).toString('hex')) {
