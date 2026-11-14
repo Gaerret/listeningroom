@@ -2,9 +2,9 @@
 .sleeve-wrap { position: relative; width: 100%; height: 100%; }
 .sleeve-wrap .sleeve { position: relative; z-index: 1; width: 82%; height: 100%; aspect-ratio: 1; background:#151515; box-shadow: 0 8px 18px #0009; }
 .vinyl-peek { position: absolute; z-index: 0; width: 86%; aspect-ratio: 1; border-radius: 50%; right: -31%; top: 7%; background: var(--vinyl-base, #222); box-shadow: 8px 8px 18px #0008; transition: right .25s ease; }
-.vinyl-peek::before { content:''; position:absolute; inset:0; border-radius:50%; background: repeating-radial-gradient(circle, #ffffff1c 0 1px, transparent 2px 4px); }
+.vinyl-peek::before { content:''; position:absolute; inset:0; border-radius:50%; background: repeating-conic-gradient(from 8deg, #ffffff26 0 2deg, transparent 2deg 8deg), repeating-radial-gradient(circle, #ffffff1c 0 1px, transparent 2px 4px); mix-blend-mode:screen; }
 .vinyl-peek[data-finish*="Clear"],.vinyl-peek[data-finish*="Transparent"] { opacity:.86; background:linear-gradient(135deg,#f5efe3aa,#ffffff22),var(--vinyl-base); }
-.vinyl-peek[data-finish*="Splatter"],.vinyl-peek[data-finish*="Marble"] { background:radial-gradient(circle at 32% 28%,#fff8 0 3%,transparent 4%),radial-gradient(circle at 70% 62%,#c33 0 5%,transparent 6%),radial-gradient(circle at 55% 22%,#fff 0 2%,transparent 3%),var(--vinyl-base); }
+.vinyl-peek[data-finish*="Splatter"],.vinyl-peek[data-finish*="Marble"] { background:repeating-conic-gradient(from 0deg,#f0442e 0 7deg,#ff9d21 7deg 13deg,#171717 13deg 20deg,#253c72 20deg 28deg,#e8d7b0 28deg 34deg,#171717 34deg 43deg),var(--vinyl-base); }
 .vinyl-peek[data-finish*="Metallic"] { background:linear-gradient(135deg,#eee8,#5556 35%,#fff8 48%,#3338 65%),var(--vinyl-base); }
 .record-card:hover .vinyl-peek { right: -25%; }
-.vinyl-peek::after { content: ''; position: absolute; inset: 39%; border-radius: 50%; background:#4a4a46; border:5px solid #b9b19c88; box-shadow:inset 0 0 0 2px #171717; }
+.vinyl-peek::after { content: ''; position: absolute; inset: 38%; border-radius: 50%; background:radial-gradient(circle,#ded6c2 0 6%,#3d3a35 7% 80%,#ded6c2 81% 86%,#282622 87%); border:3px solid #171717; box-shadow:0 2px 5px #0009; }
