@@ -28,10 +28,12 @@ export async function ensureSchema() {
       color TEXT NOT NULL,
       notes TEXT NOT NULL DEFAULT '',
       discogs_url TEXT,
+      cover_url TEXT,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `);
+  await db.query('ALTER TABLE records ADD COLUMN IF NOT EXISTS cover_url TEXT');
 }
 
 function hashPassword(password: string, salt = randomBytes(16).toString('hex')) {
