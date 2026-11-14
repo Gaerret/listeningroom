@@ -37,10 +37,11 @@ for (const record of importedRecords) {
   const discogsUrl = match?.[1] ?? null;
   const check = await verifyDiscogs(discogsUrl);
   if (!check.ok) { console.warn(`SKIP ${record.artist} — ${record.title}: ${check.reason}`); skipped++; continue; }
-  if (discogsUrl && (check.title?.toLowerCase() !== record.title.toLowerCase() || !check.artist?.toLowerCase().includes(record.artist.toLowerCase()))) { console.warn(`SKIP ${record.artist} — ${record.title}: Discogs metadata mismatch`); skipped++; continue; }
+  const mismatch = discogsUrl && (check.title?.toLowerCase() !== record.title.toLowerCase() || !check.artist?.toLowerCase().includes(record.artist.toLowerCase()));
+  if (mismatch) console.warn(`NOTE ${record.artist} — ${record.title}: Discogs metadata differs`);
   await pool.query(`INSERT INTO records (id,title,artist,year,genre,status,color,notes,discogs_url,cover_url)
     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT (id) DO UPDATE SET cover_url=EXCLUDED.cover_url, discogs_url=EXCLUDED.discogs_url`,
-    [record.id, record.title, record.artist, check.year || record.year, record.genre, record.status, record.color, record.notes, discogsUrl, check.coverUrl]);
+    [record.id, record.title, record.artist, check.year || record.year, record.genre, record.status, record.color, `${record.notes}${mismatch ? '\nDiscogs metadata differs from the spreadsheet label.' : ''}`, discogsUrl, check.coverUrl]);
   imported++;
 }
 console.log(`Imported: ${imported}; skipped after Discogs validation: ${skipped}`);
